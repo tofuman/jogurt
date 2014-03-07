@@ -15,11 +15,19 @@ void printline( int starty, int startx,int color, char *string)
 	attroff(COLOR_PAIR(color));
 }
 
-int main(){
+int getlength(char* input){
+	int length = 0;
+	while(input[length] != 0){
+		length++;
+	}
+	return length;
+}
+
+void start(){
 	initscr();                      /* Start curses mode              */
-	raw();                          /* Line buffering disabled      */
+	cbreak();                          /* Line buffering disabled      */
         keypad(stdscr, TRUE);           /* We get F1, F2 etc..          */
-        noecho();                       /* Don't echo() while we do getch */
+        echo();                       /* Don't echo() while we do getch */
 	if(has_colors() == FALSE)
         {       endwin();
                 printf("Your terminal does not support color\n");
@@ -34,10 +42,19 @@ int main(){
 	init_pair(4, COLOR_BLUE, COLOR_BLACK);
 	init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
 	init_pair(6, COLOR_RED, COLOR_BLACK);
-	
-	char* joguhrt = "Joguhrtbecher!!";
 
-	for(int i =0; i< (COLS * LINES); i+=15){
+}
+
+int main(){	
+	start();
+	char joguhrt[COLS];
+	getnstr(joguhrt,COLS);
+	int length = getlength(joguhrt);
+	
+	noecho();
+	clear();
+	refresh();
+	for(int i =0; i< (COLS * LINES); i+=length){
 		printline((int)(i/COLS) , i % COLS, i % 7, joguhrt);
 		usleep(1000);
 
