@@ -66,7 +66,7 @@ void start(){
 }
 
 int main(int argc, char *argv[]){
-	if(argc <1)
+	if(argc != 2 )
 		return -1;
 	size_t size = 0;
 	for(size = 0; (argv[1])[size] != '\0'; size++)
