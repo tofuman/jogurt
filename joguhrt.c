@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 struct rgb{
 	short r;
@@ -45,7 +46,7 @@ void start(){
 	cbreak();                          /* Line buffering disabled      */
         keypad(stdscr, TRUE);           /* We get F1, F2 etc..          */
         echo();                       /* Don't echo() while we do getch */
-
+ 
 	if(has_colors() == FALSE)
         {       endwin();
                 printf("Your terminal does not support color\n");
@@ -64,9 +65,18 @@ void start(){
 	
 }
 
-int main(){		
+int main(int argc, char *argv[]){
+	if(argc <1)
+		return -1;
+	size_t size = 0;
+	for(size = 0; argv[size] != '\0'; size++)
+		;
 	start();
-	char joguhrt[] = "Joguhrtbecher";
+	char joguhrt[size];
+	//joguhrt = (char*)malloc(size);
+	strcpy(joguhrt, argv[1]);
+	
+		
 	//getnstr(joguhrt,COLS);
 	//int length = getlength(joguhrt);
 	
@@ -85,7 +95,7 @@ int main(){
 	int color = 0;
 	while(1){
 		color++;
-		for(int j = 0; j < COLS ; j+=13){
+		for(int j = 0; j < COLS ; j+=(size+1)){
 			for(int i = 0; i < LINES; i++){
 				printline(i, j, (i+j+color) % 7, joguhrt);
 				usleep(1000);
