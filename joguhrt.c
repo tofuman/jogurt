@@ -4,15 +4,32 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+struct rgb{
+	short r;
+	short g;
+	short b;
+};
 
 
-
-void printline( int starty, int startx,int color, char *string)
+void printline( int starty, int startx, int color,  char *string)
 {	
 	attron(COLOR_PAIR(color));
+	//color_set(2, 0);
 	mvwprintw(stdscr, starty, startx, "%s", string);
 	refresh();
-	attroff(COLOR_PAIR(color));
+	attroff(COLOR_PAIR(1));
+	(void) color;
+	
+}
+
+void update_color(struct rgb* color, int i){
+	
+	color->r = (i)%1000;
+	color->g = (i)%1000;
+	color->b = (i)%1000;
+	init_color(i, color->r, color->g, color->b);
+	init_pair(i, i, COLOR_BLACK);
+
 }
 
 int getlength(char* input){
@@ -28,6 +45,7 @@ void start(){
 	cbreak();                          /* Line buffering disabled      */
         keypad(stdscr, TRUE);           /* We get F1, F2 etc..          */
         echo();                       /* Don't echo() while we do getch */
+
 	if(has_colors() == FALSE)
         {       endwin();
                 printf("Your terminal does not support color\n");
@@ -42,31 +60,43 @@ void start(){
 	init_pair(4, COLOR_BLUE, COLOR_BLACK);
 	init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
 	init_pair(6, COLOR_RED, COLOR_BLACK);
-
+	mvaddstr(5, 5, "Hallo");	
+	
 }
 
-int main(){	
+int main(){		
 	start();
-	char joguhrt[COLS];
-	getnstr(joguhrt,COLS);
-	int length = getlength(joguhrt);
+	char joguhrt[] = "Joguhrtbecher";
+	//getnstr(joguhrt,COLS);
+	//int length = getlength(joguhrt);
 	
 	noecho();
 	clear();
 	refresh();
-	for(int i =0; i< (COLS * LINES); i+=length){
-		printline((int)(i/COLS) , i % COLS, i % 7, joguhrt);
+	//struct rgb col={1,1,1};
+	//update_color(&col, 7);
+	/*for(int i =0; i< (COLS * LINES); i+=length){
+		printline((int)(i/COLS) , i ,(int)(i/length) +7,  joguhrt);
+		update_color(&col, ((int)i/length) +7);
 		usleep(1000);
 
-	}	
-
-	/*for(int j = 0; j < COLS ; j+=15){
-		for(int i = 0; i < LINES; i++){
-			printline(i, j, (i+j) % 7, joguhrt);
-			usleep(1000);
+	}*/	
+	
+	int color = 0;
+	while(1){
+		color++;
+		for(int j = 0; j < COLS ; j+=13){
+			for(int i = 0; i < LINES; i++){
+				printline(i, j, (i+j+color) % 7, joguhrt);
+				usleep(1000);
+			}
 		}
+		//clear();
+		if(color > 200000){
+			color = 0;
+		} 
 	}	
-	*/
+	
         getch();                        /* Wait for user input */
         endwin();                       /* End curses mode                */
 	
