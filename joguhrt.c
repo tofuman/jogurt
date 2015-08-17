@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
 	if(argc <1)
 		return -1;
 	size_t size = 0;
-	for(size = 0; argv[size] != '\0'; size++)
+	for(size = 0; (argv[1])[size] != '\0'; size++)
 		;
 	start();
 	char joguhrt[size];
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
 	int color = 0;
 	while(1){
 		color++;
-		for(int j = 0; j < COLS ; j+=(size+1)){
+		for(int j = 0; j < COLS ; j+=(size)){
 			for(int i = 0; i < LINES; i++){
 				printline(i, j, (i+j+color) % 7, joguhrt);
 				usleep(1000);
